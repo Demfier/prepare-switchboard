@@ -17,7 +17,7 @@ def all_sentences(data_dir):
 
 def prepare_data(data_dir):
     sentences = all_sentences(data_dir)
-    with open('data/interim/all_sentences.txt', 'w') as f:
+    with open('data/processed/all_sentences.txt', 'w') as f:
         f.write('\n'.join(sentences))
     print('Saved all sentences.')
 
