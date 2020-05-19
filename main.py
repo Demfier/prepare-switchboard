@@ -17,9 +17,26 @@ def all_sentences(data_dir):
 
 def prepare_data(data_dir):
     sentences = all_sentences(data_dir)
-    with open('data/processed/all_sentences.txt', 'w') as f:
-        f.write('\n'.join(sentences))
+    with open('data/processed/all_sentences.tsv', 'w') as f:
+        write_sents = []
+        for s in sentences:
+            if not s.strip():
+                continue
+            write_sents.append(s.strip())
+        f.write('\n'.join(write_sents))
     print('Saved all sentences.')
+
+    # split sentences for VAE training
+    train, valtest = tts(sentences, test_size=0.2, shuffle=True)
+    val, test = tts(valtest, test_size=0.5, shuffle=True)
+
+    # save split dataset
+    with open('data/processed/train_sentences.tsv', 'w') as f:
+        f.write('\n'.join(train))
+    with open('data/processed/valid_sentences.tsv', 'w') as f:
+        f.write('\n'.join(val))
+    with open('data/processed/test_sentences.tsv', 'w') as f:
+        f.write('\n'.join(test))
 
     # split all sentences into utterances
     q_r_pairs = []
@@ -50,7 +67,7 @@ def prepare_data(data_dir):
     # save split dataset
     with open('data/processed/train_pairs.tsv', 'w') as f:
         f.write('\n'.join(train))
-    with open('data/processed/val_pairs.tsv', 'w') as f:
+    with open('data/processed/valid_pairs.tsv', 'w') as f:
         f.write('\n'.join(val))
     with open('data/processed/test_pairs.tsv', 'w') as f:
         f.write('\n'.join(test))
